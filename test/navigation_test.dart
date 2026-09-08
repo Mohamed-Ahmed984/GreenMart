@@ -3,9 +3,21 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_application_13/main.dart';
 import 'package:flutter_application_13/Core/Features/intro/splash_screen.dart';
 
-Future<void> tapVisible(WidgetTester tester, Finder finder) async {
-  await tester.ensureVisible(finder);
+Future<void> reveal(WidgetTester tester, Finder finder) async {
+  if (finder.evaluate().isEmpty) {
+    final page = find.byWidgetPredicate((widget) => widget is Scrollable &&
+        widget.axisDirection == AxisDirection.down).last;
+    await tester.drag(page, const Offset(0, 3000));
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(finder, 180, scrollable: page, maxScrolls: 40);
+  } else {
+    await tester.ensureVisible(finder);
+  }
   await tester.pumpAndSettle();
+}
+
+Future<void> tapVisible(WidgetTester tester, Finder finder) async {
+  await reveal(tester, finder);
   await tester.tap(finder);
   await tester.pumpAndSettle();
 }

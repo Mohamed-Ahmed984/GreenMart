@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_application_13/Core/Features/main/main_app_screen.dart';
 import 'package:flutter_application_13/Core/Style/app_theme.dart';
 import 'package:flutter_application_13/shopping/shopping_store.dart';
-import 'navigation_test.dart' show tapVisible;
+import 'navigation_test.dart' show tapVisible, reveal;
 
 void main() {
   WidgetController.hitTestWarningShouldBeFatal = true;
@@ -52,6 +52,7 @@ void main() {
     await tapVisible(tester, find.text('Done'));
     expect(find.text('Your basket is empty'), findsOneWidget);
     await tapVisible(tester, find.text('Account'));
+    await reveal(tester, find.text('DEMO-0001'));
     expect(find.text('DEMO-0001'), findsOneWidget);
     await tester.pumpWidget(const SizedBox.shrink());
     expect(tester.takeException(), isNull);
