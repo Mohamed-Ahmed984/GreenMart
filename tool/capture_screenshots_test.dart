@@ -20,10 +20,13 @@ void main() {
       poppins.addFont(rootBundle.load('Assets/Fonts/Poppins-$weight.ttf'));
     }
     await poppins.load();
-    await (FontLoader('MaterialIcons')
-      ..addFont(rootBundle.load('fonts/MaterialIcons-Regular.otf'))).load();
-    await (FontLoader('packages/cupertino_icons/CupertinoIcons')
-      ..addFont(rootBundle.load('packages/cupertino_icons/assets/CupertinoIcons.ttf'))).load();
+    await (FontLoader(
+      'MaterialIcons',
+    )..addFont(rootBundle.load('fonts/MaterialIcons-Regular.otf'))).load();
+    await (FontLoader('packages/cupertino_icons/CupertinoIcons')..addFont(
+          rootBundle.load('packages/cupertino_icons/assets/CupertinoIcons.ttf'),
+        ))
+        .load();
   });
 
   testWidgets('capture exactly three GreenMart screens', (tester) async {
@@ -37,15 +40,24 @@ void main() {
       final store = ShoppingStore();
       addTearDown(store.dispose);
       final boundaryKey = GlobalKey();
-      await tester.pumpWidget(RepaintBoundary(key: boundaryKey,
-        child: MaterialApp(debugShowCheckedModeBanner: false, theme: AppThemes.light,
-          home: MainAppScreen(store: store))));
+      await tester.pumpWidget(
+        RepaintBoundary(
+          key: boundaryKey,
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: AppThemes.light,
+            home: MainAppScreen(store: store),
+          ),
+        ),
+      );
       await tester.pumpAndSettle();
       Future<void> capture(String name) async {
         FocusManager.instance.primaryFocus?.unfocus();
         await tester.pumpAndSettle();
         expect(tester.takeException(), isNull);
-        final boundary = boundaryKey.currentContext!.findRenderObject()! as RenderRepaintBoundary;
+        final boundary =
+            boundaryKey.currentContext!.findRenderObject()!
+                as RenderRepaintBoundary;
         await tester.runAsync(() async {
           final image = await boundary.toImage(pixelRatio: 2);
           final data = await image.toByteData(format: ui.ImageByteFormat.png);
@@ -55,6 +67,7 @@ void main() {
           image.dispose();
         });
       }
+
       await tapVisible(tester, find.byKey(const Key('favorite-1')));
       await capture('01-home');
       await tapVisible(tester, find.text('Explore'));
