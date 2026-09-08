@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_13/Core/Style/Colors.dart';
+import 'package:flutter_application_13/Core/Style/app_colors.dart';
 
 class AppThemes {
   static const String fontFamily = "Poppins";

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_13/Core/Constant/app_image.dart';
 import 'package:flutter_application_13/Core/Features/aut/page/login_screen.dart';
-import 'package:flutter_application_13/Core/Style/Colors.dart';
+import 'package:flutter_application_13/Core/Style/app_colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class WelcomeScreen extends StatelessWidget {

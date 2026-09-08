@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_13/Core/Constant/app_image.dart';
 import 'package:flutter_application_13/Core/Features/home/pages/home_screen.dart';
-import 'package:flutter_application_13/Core/Style/Colors.dart';
+import 'package:flutter_application_13/Core/Style/app_colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_application_13/Core/Features/intro/welcome_screen.dart';
 

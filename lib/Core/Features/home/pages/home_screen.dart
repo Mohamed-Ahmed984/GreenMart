@@ -3,7 +3,7 @@ import 'package:flutter_application_13/Core/Features/home/data/product_model.dar
 import 'package:flutter_application_13/Core/Features/home/search/search_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_application_13/Core/Constant/app_image.dart';
-import 'package:flutter_application_13/Core/Style/Colors.dart';
+import 'package:flutter_application_13/Core/Style/app_colors.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -71,11 +71,11 @@ class HomeScreen extends StatelessWidget {
                 height: 230,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
-                  itemCount: Offers.length,
+                  itemCount: offers.length,
                   separatorBuilder: (context, index) =>
                       const SizedBox(width: 14),
                   itemBuilder: (context, index) {
-                    return _productCard(Offers[index]);
+                    return _productCard(offers[index]);
                   },
                 ),
               ),
@@ -102,11 +102,11 @@ class HomeScreen extends StatelessWidget {
                 height: 230,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
-                  itemCount: BestSelling.length,
+                  itemCount: bestSelling.length,
                   separatorBuilder: (context, index) =>
                       const SizedBox(width: 14),
                   itemBuilder: (context, index) {
-                    return _productCard(BestSelling[index]);
+                    return _productCard(bestSelling[index]);
                   },
                 ),
               ),
