@@ -1,253 +1,53 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_13/Core/Features/home/data/product_model.dart';
-import 'package:flutter_application_13/Core/Features/home/search/search_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_application_13/Core/Constant/app_image.dart';
-import 'package:flutter_application_13/Core/Style/app_colors.dart';
+import '../../../Constant/app_image.dart';
+import '../data/product_model.dart';
+import '../search/search_screen.dart';
+import '../../../../shopping/product_card.dart';
+import '../../../../shopping/shopping_store.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({super.key, required this.store});
+  final ShoppingStore store;
+
+  void _browse(BuildContext context, {String title = 'Explore', List<ProductModel> products = allProducts}) {
+    Navigator.push(context, MaterialPageRoute<void>(builder: (_) =>
+      SearchScreen(store: store, title: title, products: products)));
+  }
+
+  Widget _section(BuildContext context, String title, List<ProductModel> products) {
+    final scale = MediaQuery.textScalerOf(context).scale(16) / 16;
+    return Column(children: [
+      Row(children: [
+        Expanded(child: Text(title, style: Theme.of(context).textTheme.titleLarge)),
+        TextButton(onPressed: () => _browse(context, title: title, products: products),
+          child: const Text('See all')),
+      ]),
+      const SizedBox(height: 12),
+      SizedBox(height: 275 + (scale - 1).clamp(0, 3).toDouble() * 100,
+        child: ListView.separated(scrollDirection: Axis.horizontal,
+          itemCount: products.length, separatorBuilder: (_, index) => const SizedBox(width: 14),
+          itemBuilder: (_, index) => SizedBox(width: 180,
+            child: ProductCard(product: products[index], store: store)))),
+    ]);
+  }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: CustomImageSvg(
-          path: AppImage.logo,
-          color: AppColors.primaryColor,
-          height: 28,
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              const SizedBox(height: 20),
-
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SearchScreen(),
-                    ),
-                  );
-                },
-                child: Hero(
-                  tag: 'search',
-                  child: Material(
-                    color: Colors.transparent,
-                    child: CustomTextFormField(
-                      prefixIcon: const Icon(Icons.search),
-                      hintText: 'Search for products',
-                      enabled: false,
-                      onChanged: (String value) {},
-                    ),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              Row(
-                children: [
-                  const Expanded(
-                    child: Text(
-                      "Exclusive Offers",
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    "see all",
-                    style: TextStyle(color: AppColors.primaryColor),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 16),
-
-              SizedBox(
-                height: 230,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: offers.length,
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(width: 14),
-                  itemBuilder: (context, index) {
-                    return _productCard(offers[index]);
-                  },
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              Row(
-                children: [
-                  const Expanded(
-                    child: Text(
-                      "Best Selling",
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    "see all",
-                    style: TextStyle(color: AppColors.primaryColor),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 16),
-
-              SizedBox(
-                height: 230,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: bestSelling.length,
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(width: 14),
-                  itemBuilder: (context, index) {
-                    return _productCard(bestSelling[index]);
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  static Widget _productCard(ProductModel product) {
-    return Container(
-      width: 160,
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: Colors.grey.shade300, width: 1),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: 90,
-            width: double.infinity,
-            child: Image.network(
-              product.image,
-              fit: BoxFit.contain,
-              errorBuilder: (_, error, stack) =>
-                  const Icon(Icons.image_not_supported_outlined, size: 48),
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            product.name,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            product.quantity,
-            style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
-          ),
-          const Spacer(),
-          Row(
-            children: [
-              Text(
-                '\$${product.price.toStringAsFixed(1)}',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const Spacer(),
-              FloatingActionButton.small(
-                heroTag: 'add-${product.id}',
-                elevation: 0,
-                backgroundColor: AppColors.primaryColor,
-                foregroundColor: AppColors.background,
-                onPressed: () {},
-                child: const Icon(Icons.add),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class CustomImageSvg extends StatelessWidget {
-  final String path;
-  final Color? color;
-  final double? height;
-  final double? width;
-
-  const CustomImageSvg({
-    super.key,
-    required this.path,
-    this.color,
-    this.height,
-    this.width,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SvgPicture.asset(
-      path,
-      height: height,
-      width: width,
-      colorFilter: color != null
-          ? ColorFilter.mode(color!, BlendMode.srcIn)
-          : null,
-    );
-  }
-}
-
-class CustomTextFormField extends StatelessWidget {
-  final TextEditingController? controller;
-  final String? hintText;
-  final Widget? prefixIcon;
-  final bool enabled;
-  final ValueChanged<String> onChanged;
-
-  const CustomTextFormField({
-    super.key,
-    this.controller,
-    this.hintText,
-    this.prefixIcon,
-    this.enabled = true,
-    required this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      enabled: enabled,
-      onChanged: onChanged,
-      controller: controller,
-      decoration: InputDecoration(
-        hintText: hintText,
-        prefixIcon: prefixIcon,
-        filled: true,
-        fillColor: const Color(0xffF2F3F2),
-        contentPadding: const EdgeInsets.symmetric(vertical: 14),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: BorderSide.none,
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(centerTitle: true, title: SvgPicture.asset(AppImage.logo,
+      height: 30, colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.primary, BlendMode.srcIn))),
+    body: ListView(padding: const EdgeInsets.all(16), children: [
+      Text('Fresh picks, every day', style: Theme.of(context).textTheme.headlineSmall),
+      const SizedBox(height: 8),
+      const Text('Build a basket of your everyday favorites.'),
+      const SizedBox(height: 20),
+      OutlinedButton.icon(key: const Key('open-search'), onPressed: () => _browse(context),
+        icon: const Icon(Icons.search), label: const Text('Search for products')),
+      const SizedBox(height: 20),
+      _section(context, 'Exclusive Offers', offers),
+      const SizedBox(height: 24),
+      _section(context, 'Best Selling', bestSelling),
+      const SizedBox(height: 20),
+    ]),
+  );
 }

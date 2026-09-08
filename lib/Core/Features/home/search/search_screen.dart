@@ -1,143 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_13/Core/Features/home/data/dummy_data.dart';
+import '../data/product_model.dart';
+import '../../../../shopping/product_card.dart';
+import '../../../../shopping/shopping_store.dart';
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({super.key});
-
+  const SearchScreen({super.key, required this.store, this.title = 'Explore',
+    this.products = allProducts});
+  final ShoppingStore store;
+  final String title;
+  final List<ProductModel> products;
   @override
   State<SearchScreen> createState() => _SearchScreenState();
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  TextEditingController controller = TextEditingController();
-  List<ProductModel> searchResult = allProducts;
-
+  final _search = TextEditingController();
+  ProductCategory? _category;
   @override
   void dispose() {
-    controller.dispose();
+    _search.dispose();
     super.dispose();
   }
 
-  void onSearch(String value) {
-    setState(() {
-      if (value.trim().isEmpty) {
-        searchResult = allProducts;
-      } else {
-        searchResult = getProductsByName(value);
-      }
-    });
-  }
-
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        titleSpacing: 0,
-        title: Hero(
-          tag: 'search',
-          child: Material(
-            color: Colors.transparent,
-            child: TextField(
-              controller: controller,
-              onChanged: onSearch,
-              decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.search),
-                hintText: 'Search for products',
-                border: InputBorder.none,
-              ),
-            ),
-          ),
-        ),
-      ),
-
-      body: Padding(
-        padding: const EdgeInsets.all(12),
-        child: GridView.builder(
-          itemCount: searchResult.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-            childAspectRatio: 0.75,
-          ),
-          itemBuilder: (context, index) {
-            final item = searchResult[index];
-
-            return ItemCard(product: item);
-          },
-        ),
-      ),
-    );
-  }
-}
-
-class ItemCard extends StatelessWidget {
-  final ProductModel product;
-
-  const ItemCard({super.key, required this.product});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade300),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(16),
-              ),
-              child: Image.network(
-                product.image,
-                errorBuilder: (_, error, stack) => const Center(
-                  child: Icon(Icons.image_not_supported_outlined, size: 48),
-                ),
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  product.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-
-                const SizedBox(height: 5),
-
-                Text(
-                  product.quantity,
-                  style: const TextStyle(fontSize: 13, color: Colors.grey),
-                ),
-
-                const SizedBox(height: 5),
-
-                Text(
-                  "\$${product.price}",
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: Text(widget.title)),
+    body: Column(children: [
+      Padding(padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+        child: TextField(key: const Key('product-search'), controller: _search,
+          onChanged: (_) => setState(() {}),
+          decoration: InputDecoration(hintText: 'Search for products', prefixIcon: const Icon(Icons.search),
+            suffixIcon: _search.text.isEmpty ? null : IconButton(tooltip: 'Clear search',
+              onPressed: () => setState(_search.clear), icon: const Icon(Icons.close))))),
+      Padding(padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Wrap(spacing: 8, runSpacing: 8, children: [
+          ChoiceChip(label: const Text('All'), selected: _category == null,
+            onSelected: (_) => setState(() => _category = null)),
+          ChoiceChip(label: const Text('Fruit'), selected: _category == ProductCategory.fruit,
+            onSelected: (_) => setState(() => _category = ProductCategory.fruit)),
+          ChoiceChip(label: const Text('Vegetables'), selected: _category == ProductCategory.vegetables,
+            onSelected: (_) => setState(() => _category = ProductCategory.vegetables)),
+        ])),
+      Expanded(child: ProductGrid(products: getProductsByName(_search.text,
+        category: _category, products: widget.products), store: widget.store)),
+    ]),
+  );
 }

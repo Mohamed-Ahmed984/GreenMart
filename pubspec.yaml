@@ -21,6 +21,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - Assets/products/
     - Assets/Image/Logo.svg
     - Assets/Image/Welcome.png
     - Assets/Image/carrot.svg
