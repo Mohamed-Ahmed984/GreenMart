@@ -53,10 +53,15 @@ class HomeScreen extends StatelessWidget {
 
               Row(
                 children: [
-                  const Expanded(child: Text(
-                    "Exclusive Offers",
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-                  )),
+                  const Expanded(
+                    child: Text(
+                      "Exclusive Offers",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
                   const SizedBox(width: 8),
                   Text(
                     "see all",
@@ -84,10 +89,15 @@ class HomeScreen extends StatelessWidget {
 
               Row(
                 children: [
-                  const Expanded(child: Text(
-                    "Best Selling",
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-                  )),
+                  const Expanded(
+                    child: Text(
+                      "Best Selling",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
                   const SizedBox(width: 8),
                   Text(
                     "see all",
@@ -132,7 +142,12 @@ class HomeScreen extends StatelessWidget {
           SizedBox(
             height: 90,
             width: double.infinity,
-            child: Image.network(product.image, fit: BoxFit.contain, errorBuilder: (_, error, stack) => const Icon(Icons.image_not_supported_outlined, size: 48)),
+            child: Image.network(
+              product.image,
+              fit: BoxFit.contain,
+              errorBuilder: (_, error, stack) =>
+                  const Icon(Icons.image_not_supported_outlined, size: 48),
+            ),
           ),
           const SizedBox(height: 10),
           Text(

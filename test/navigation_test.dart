@@ -12,7 +12,9 @@ Future<void> tapVisible(WidgetTester tester, Finder finder) async {
 
 void main() {
   WidgetController.hitTestWarningShouldBeFatal = true;
-  testWidgets('small-screen onboarding, validation, demo sign-in and exit', (tester) async {
+  testWidgets('small-screen onboarding, validation, demo sign-in and exit', (
+    tester,
+  ) async {
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(320, 568);
     addTearDown(tester.view.resetPhysicalSize);
@@ -24,8 +26,14 @@ void main() {
     await tapVisible(tester, find.byKey(const Key('demo-login')));
     expect(find.text('Enter a valid email address'), findsOneWidget);
     expect(find.text('Use at least 6 characters'), findsOneWidget);
-    await tester.enterText(find.byKey(const Key('login-email')), 'demo@example.com');
-    await tester.enterText(find.byKey(const Key('login-password')), 'sample123');
+    await tester.enterText(
+      find.byKey(const Key('login-email')),
+      'demo@example.com',
+    );
+    await tester.enterText(
+      find.byKey(const Key('login-password')),
+      'sample123',
+    );
     await tapVisible(tester, find.byTooltip('Show password'));
     expect(find.byTooltip('Hide password'), findsOneWidget);
     await tapVisible(tester, find.byKey(const Key('demo-login')));

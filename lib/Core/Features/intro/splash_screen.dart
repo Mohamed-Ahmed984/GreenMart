@@ -18,8 +18,10 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     _timer = Timer(const Duration(milliseconds: 700), () {
       if (!mounted) return;
-      Navigator.pushReplacement(context,
-          MaterialPageRoute<void>(builder: (_) => const WelcomeScreen()));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute<void>(builder: (_) => const WelcomeScreen()),
+      );
     });
   }
 
@@ -31,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        backgroundColor: AppColors.primaryColor,
-        body: Center(child: SvgPicture.asset(AppImage.logo, width: 220)),
-      );
+    backgroundColor: AppColors.primaryColor,
+    body: Center(child: SvgPicture.asset(AppImage.logo, width: 220)),
+  );
 }

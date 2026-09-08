@@ -27,20 +27,37 @@ class _MainAppScreenState extends State<MainAppScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: currentindex == 4 ? Scaffold(
-        appBar: AppBar(title: const Text('Your account')),
-        body: ListView(padding: const EdgeInsets.all(24), children: [
-          const Icon(Icons.person_outline, size: 72),
-          const SizedBox(height: 20),
-          Text(widget.email ?? 'Guest shopper', textAlign: TextAlign.center),
-          const SizedBox(height: 16),
-          const Text('This is a local shopping demo. No real account, payment, or delivery service is connected.'),
-          const SizedBox(height: 24),
-          OutlinedButton(onPressed: () => Navigator.pushAndRemoveUntil(context,
-            MaterialPageRoute<void>(builder: (_) => const WelcomeScreen()), (_) => false),
-            child: const Text('Leave demo')),
-        ]),
-      ) : screens[currentindex],
+      body: currentindex == 4
+          ? Scaffold(
+              appBar: AppBar(title: const Text('Your account')),
+              body: ListView(
+                padding: const EdgeInsets.all(24),
+                children: [
+                  const Icon(Icons.person_outline, size: 72),
+                  const SizedBox(height: 20),
+                  Text(
+                    widget.email ?? 'Guest shopper',
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'This is a local shopping demo. No real account, payment, or delivery service is connected.',
+                  ),
+                  const SizedBox(height: 24),
+                  OutlinedButton(
+                    onPressed: () => Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (_) => const WelcomeScreen(),
+                      ),
+                      (_) => false,
+                    ),
+                    child: const Text('Leave demo'),
+                  ),
+                ],
+              ),
+            )
+          : screens[currentindex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: currentindex,

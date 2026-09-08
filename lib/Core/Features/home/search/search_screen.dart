@@ -93,7 +93,9 @@ class ItemCard extends StatelessWidget {
               ),
               child: Image.network(
                 product.image,
-                errorBuilder: (_, error, stack) => const Center(child: Icon(Icons.image_not_supported_outlined, size: 48)),
+                errorBuilder: (_, error, stack) => const Center(
+                  child: Icon(Icons.image_not_supported_outlined, size: 48),
+                ),
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),
