@@ -10,7 +10,7 @@ class CartLine {
 
 class DemoOrder {
   DemoOrder({required this.number, required List<CartLine> lines})
-      : lines = List.unmodifiable(lines);
+    : lines = List.unmodifiable(lines);
   final int number;
   final List<CartLine> lines;
   int get totalCents => lines.fold(0, (sum, line) => sum + line.totalCents);
@@ -21,18 +21,24 @@ class ShoppingStore extends ChangeNotifier {
   static const maxQuantity = 99;
   final Map<String, int> _quantities = {};
   final Set<String> _favorites = {};
-  final Map<String, ProductModel> _catalog = {for (final p in allProducts) p.id: p};
+  final Map<String, ProductModel> _catalog = {
+    for (final p in allProducts) p.id: p,
+  };
   DemoOrder? lastOrder;
   int _orderNumber = 0;
 
-  ProductModel _product(String id) => _catalog[id] ??
-      (throw ArgumentError.value(id, 'id', 'Unknown product'));
+  ProductModel _product(String id) =>
+      _catalog[id] ?? (throw ArgumentError.value(id, 'id', 'Unknown product'));
   int quantity(String id) => _quantities[id] ?? 0;
   bool isFavorite(String id) => _favorites.contains(id);
-  List<CartLine> get lines => List.unmodifiable(_quantities.entries
-      .map((entry) => CartLine(_product(entry.key), entry.value)));
-  List<ProductModel> get favorites => List.unmodifiable(allProducts
-      .where((product) => _favorites.contains(product.id)));
+  List<CartLine> get lines => List.unmodifiable(
+    _quantities.entries.map(
+      (entry) => CartLine(_product(entry.key), entry.value),
+    ),
+  );
+  List<ProductModel> get favorites => List.unmodifiable(
+    allProducts.where((product) => _favorites.contains(product.id)),
+  );
   int get itemCount => _quantities.values.fold(0, (sum, value) => sum + value);
   int get totalCents => lines.fold(0, (sum, line) => sum + line.totalCents);
 

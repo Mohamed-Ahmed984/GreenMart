@@ -5,11 +5,21 @@ import 'package:flutter_application_13/Core/Features/intro/splash_screen.dart';
 
 Future<void> reveal(WidgetTester tester, Finder finder) async {
   if (finder.evaluate().isEmpty) {
-    final page = find.byWidgetPredicate((widget) => widget is Scrollable &&
-        widget.axisDirection == AxisDirection.down).last;
+    final page = find
+        .byWidgetPredicate(
+          (widget) =>
+              widget is Scrollable &&
+              widget.axisDirection == AxisDirection.down,
+        )
+        .last;
     await tester.drag(page, const Offset(0, 3000));
     await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(finder, 180, scrollable: page, maxScrolls: 40);
+    await tester.scrollUntilVisible(
+      finder,
+      180,
+      scrollable: page,
+      maxScrolls: 40,
+    );
   } else {
     await tester.ensureVisible(finder);
   }
