@@ -12,6 +12,12 @@ class _SearchScreenState extends State<SearchScreen> {
   TextEditingController controller = TextEditingController();
   List<ProductModel> searchResult = allProducts;
 
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   void onSearch(String value) {
     setState(() {
       if (value.trim().isEmpty) {
@@ -87,6 +93,7 @@ class ItemCard extends StatelessWidget {
               ),
               child: Image.network(
                 product.image,
+                errorBuilder: (_, error, stack) => const Center(child: Icon(Icons.image_not_supported_outlined, size: 48)),
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),

@@ -1,7 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_13/Core/Features/intro/splash_screen.dart';
-import 'package:flutter_application_13/Core/Style/Colors.dart';
+import 'package:flutter_application_13/Core/Style/Theme.dart';
 
 void main() {
   runApp(const MainApp());
@@ -13,16 +12,8 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          selectedLabelStyle: TextStyle(fontSize: 14, height: 1.8),
-        ),
-        scaffoldBackgroundColor: AppColors.background,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: AppColors.primaryColor,
-          onSurface: AppColors.blackcolor,
-        ),
-      ),
+      title: 'GreenMart',
+      theme: AppThemes.light,
       debugShowCheckedModeBanner: false,
       home: const SplashScreen(),
     );
