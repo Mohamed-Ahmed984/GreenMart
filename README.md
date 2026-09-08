@@ -1,54 +1,84 @@
-# GreenMart — Grocery App Prototype
+# GreenMart — Grocery Shopping Demo
 
-Flutter grocery app prototype with product browsing, local search, and login form UI.
+A Flutter grocery app with a working local shopping flow: browse products, search by name or category, save favorites, build a basket, and review a demo order.
 
-**Built with:** Flutter and Dart · **Category:** UI prototype
+## Screenshots
 
-## Preview
+Three screenshots captured directly from the running Flutter UI with bundled fonts and sample products. Click an image to see it at full size.
 
-<img width="1920" height="1006" alt="GreenMart - Grocery App Prototype screenshot 1" src="https://github.com/user-attachments/assets/e0141c47-8eb0-4022-bf92-fb93e038c2ba" />
-
-<img width="1882" height="992" alt="GreenMart - Grocery App Prototype screenshot 2" src="https://github.com/user-attachments/assets/2f804dee-5e59-4614-9dfa-641df6fdfada" />
+| Home | Explore & categories | Basket & quantities |
+| :---: | :---: | :---: |
+| [<img src="docs/screenshots/01-home.png" width="270" alt="GreenMart home with exclusive offers and product cards">](docs/screenshots/01-home.png) | [<img src="docs/screenshots/02-explore.png" width="270" alt="GreenMart product grid filtered to fruit">](docs/screenshots/02-explore.png) | [<img src="docs/screenshots/03-cart.png" width="270" alt="GreenMart basket with quantities and an accurate total">](docs/screenshots/03-cart.png) |
 
 ## Features
 
-- Splash screen followed by a home screen with exclusive offers and best-selling products.
-- Product search that filters a local sample catalog by name.
-- Bottom navigation with Home, Explore, Cart, Favorites, and Account tabs.
-- Separate welcome and login screens, with email/password validation and password visibility control.
-- SVG assets and bundled Poppins fonts.
+- Responsive welcome screen, validated demo sign-in, and guest access.
+- One catalog shared by Home, Explore, search, favorites, and the basket.
+- Working **See all** links and case-insensitive search that trims extra spaces.
+- Fruit and vegetable category filters, plus useful empty states.
+- Add products, merge repeated additions, adjust quantities from 1–99, and remove items.
+- Exact price totals calculated with integer cents; sample prices are shown in USD.
+- Save and unsave favorites from any product list.
+- Review a clearly labeled demo order, cancel it, or confirm it and receive a local reference.
+- See the latest demo order in Account and leave the session.
+- Bundled product images where available; labeled fallbacks for unavailable remote images.
 
-## Current scope
+## Demo scope
 
-Frontend prototype using local sample data. The default flow goes from the splash screen to Home after about six seconds, bypassing Welcome and Login. Explore, Cart, Favorites, and Account currently show placeholder text. Login only validates the form; real authentication, checkout, persistence, and cart actions are not implemented.
+This is a frontend portfolio project. **There is no real authentication, payment processing, delivery service, or backend.** Demo sign-in accepts a validly formatted email and a sample password of at least six characters; it does not verify credentials or create an account. You can also continue as a guest.
+
+Basket contents, favorites, and the latest demo order are held in memory. They survive navigation between tabs, but restarting the app or leaving the demo clears the session. No password is saved. A confirmed demo order clears the basket, preserves favorites, and never charges money or sends an actual order.
+
+## Technologies
+
+Flutter **3.38.10**, Dart, Material 3, `ChangeNotifier` for shared shopping state, `flutter_svg`, and bundled Poppins fonts. No backend setup or secret keys are needed.
 
 ## Run locally
-
-Use a Flutter SDK whose bundled Dart version satisfies `^3.10.7` (the constraint in `pubspec.yaml`). Configure a device or emulator for your target platform.
 
 ```bash
 git clone https://github.com/Mohamed-Ahmed984/GreenMart.git
 cd GreenMart
 flutter pub get
-flutter devices
 flutter run
 ```
 
-An internet connection is needed for the remote images used by this app. Image availability depends on their external hosts.
+Use `flutter run -d chrome` for the web version. Native builds require the corresponding Flutter platform tools. The project requires Dart `^3.10.7`; Flutter 3.38.10 is the version used by CI.
 
-Platform scaffolding is included for `android`, `ios`, `linux`, `macos`, `web`, `windows`. These folders do not imply every platform has been tested.
+Some product photos still come from external hosts. Shopping remains usable if those photos are unavailable; the app shows a labeled fallback. Bundled image sources are listed in [`Assets/products/SOURCES.md`](Assets/products/SOURCES.md).
 
-## Code guide
+## Project structure
 
-| Path | Purpose |
+| Path | Responsibility |
 | --- | --- |
-| [`lib/main.dart`](lib/main.dart) | Application entry point and theme setup. |
-| [`lib/Core/Features/intro/`](lib/Core/Features/intro/) | Splash and welcome screens. |
-| [`lib/Core/Features/aut/page/`](lib/Core/Features/aut/page/) | Login form UI. |
-| [`lib/Core/Features/home/`](lib/Core/Features/home/) | Product data, home screen, and search. |
-| [`lib/Core/Features/main/`](lib/Core/Features/main/) | Bottom navigation shell. |
-| [`Assets/`](Assets/) | Images, SVG icons, and fonts. |
+| `lib/main.dart` | App entry point and theme |
+| `lib/Core/Features/intro/` | Safe splash transition and responsive welcome screen |
+| `lib/Core/Features/aut/page/` | Demo sign-in and guest access |
+| `lib/Core/Features/main/` | Tabs, shared shopping session, and Account |
+| `lib/Core/Features/home/` | Single product catalog, Home, and Explore/search |
+| `lib/shopping/` | Basket/favorites state, product cards, totals, and demo checkout |
+| `test/` | Navigation, shopping logic, and UI regression tests |
+| `tool/capture_screenshots_test.dart` | Reproduce the three README screenshots |
 
-## Explore more
+## Validation
 
-[Browse my projects by category](https://github.com/Mohamed-Ahmed984/Github#project-directory).
+```bash
+flutter analyze
+flutter test
+flutter build web --release
+```
+
+Tests cover navigation, invalid login inputs, guest entry, search/category filtering, duplicate additions, quantity limits, integer totals, favorites, order snapshots, checkout cancellation, empty states, and narrow-screen workflows. GitHub Actions validates the project from a fresh checkout.
+
+To refresh the screenshot gallery:
+
+```bash
+flutter test tool/capture_screenshots_test.dart
+```
+
+Native Android/iOS device behavior still needs testing on the devices you intend to support.
+
+## Development branches
+
+- `fix/navigation-and-sign-in` — onboarding, form behavior, safe navigation, and analyzer cleanup.
+- `fix/cart-and-catalog` — shared catalog, search, favorites, quantities, totals, and demo checkout.
+- `docs/validation-and-screenshots` — edge-case checks, documentation, CI cleanup, and this three-image gallery.
