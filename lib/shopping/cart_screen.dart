@@ -135,9 +135,14 @@ class CartScreen extends StatelessWidget {
                                     key: Key('decrease-${product.id}'),
                                     tooltip: 'Decrease ${product.name}',
                                     onPressed: () {
-                                      final current = store.quantity(product.id);
+                                      final current = store.quantity(
+                                        product.id,
+                                      );
                                       if (current > 0) {
-                                        store.setQuantity(product.id, current - 1);
+                                        store.setQuantity(
+                                          product.id,
+                                          current - 1,
+                                        );
                                       }
                                     },
                                     icon: const Icon(Icons.remove),

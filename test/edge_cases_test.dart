@@ -80,10 +80,17 @@ void main() {
     await tester.pumpWidget(const SizedBox.shrink());
     expect(tester.takeException(), isNull);
   });
-  testWidgets('rapid basket decrements use the latest quantity', (tester) async {
+  testWidgets('rapid basket decrements use the latest quantity', (
+    tester,
+  ) async {
     final store = ShoppingStore()..setQuantity('1', 2);
     addTearDown(store.dispose);
-    await tester.pumpWidget(MaterialApp(theme: AppThemes.light, home: MainAppScreen(store: store)));
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppThemes.light,
+        home: MainAppScreen(store: store),
+      ),
+    );
     await tapVisible(tester, find.text('Cart'));
     final decrease = find.byKey(const Key('decrease-1'));
     await tester.tap(decrease);
@@ -95,5 +102,4 @@ void main() {
     expect(tester.takeException(), isNull);
     await tester.pumpWidget(const SizedBox.shrink());
   });
-
 }
