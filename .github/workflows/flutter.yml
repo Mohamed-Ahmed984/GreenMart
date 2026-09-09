@@ -3,7 +3,10 @@ on:
   push:
   pull_request:
 permissions:
-  contents: write
+  contents: read
+concurrency:
+  group: greenmart-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -16,26 +19,7 @@ jobs:
           channel: stable
           cache: true
       - run: flutter pub get
-      - name: Format and apply safe analyzer fixes on development branches
-        if: github.event_name == 'push' && github.ref != 'refs/heads/main'
-        run: |
-          dart fix --apply
-          dart format lib test
-          if [ -d tool ]; then dart format tool; fi
+      - run: dart format --output=none --set-exit-if-changed lib test tool
       - run: flutter analyze
       - run: flutter test
       - run: flutter build web --release
-      - name: Capture three README screenshots
-        if: github.ref == 'refs/heads/docs/validation-and-screenshots'
-        run: flutter test tool/capture_screenshots_test.dart --reporter expanded
-      - name: Save validated formatting and generated assets
-        if: github.event_name == 'push' && github.ref != 'refs/heads/main'
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add lib test pubspec.lock
-          if [ -d tool ]; then git add tool; fi
-          if [ -d docs/screenshots ]; then git add docs/screenshots; fi
-          if git diff --cached --quiet; then exit 0; fi
-          git commit -m 'Apply validated formatting and refresh generated assets'
-          git push origin "HEAD:$GITHUB_REF_NAME"
