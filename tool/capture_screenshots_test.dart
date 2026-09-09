@@ -10,6 +10,7 @@ import 'package:flutter_application_13/Core/Features/main/main_app_screen.dart';
 import 'package:flutter_application_13/Core/Style/app_theme.dart';
 import 'package:flutter_application_13/shopping/shopping_store.dart';
 import '../test/navigation_test.dart' show tapVisible;
+import 'package:flutter_application_13/Core/Features/home/data/product_model.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -37,7 +38,7 @@ void main() {
       tester.view.physicalSize = const Size(430, 960);
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
-      final store = ShoppingStore();
+      final store = ShoppingStore()..toggleFavorite('1');
       addTearDown(store.dispose);
       final boundaryKey = GlobalKey();
       await tester.pumpWidget(
@@ -50,6 +51,14 @@ void main() {
           ),
         ),
       );
+      await tester.runAsync(() async {
+        final context = tester.element(find.byType(MainAppScreen));
+        for (final product in allProducts) {
+          if (product.imageAsset != null) {
+            await precacheImage(AssetImage(product.imageAsset!), context);
+          }
+        }
+      });
       await tester.pumpAndSettle();
       Future<void> capture(String name) async {
         FocusManager.instance.primaryFocus?.unfocus();
@@ -68,7 +77,6 @@ void main() {
         });
       }
 
-      await tapVisible(tester, find.byKey(const Key('favorite-1')));
       await capture('01-home');
       await tapVisible(tester, find.text('Explore'));
       await tapVisible(tester, find.text('Fruit'));
