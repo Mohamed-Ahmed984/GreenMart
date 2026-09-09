@@ -1,5 +1,5 @@
 name: flutter_application_13
-description: "A new Flutter project."
+description: "GreenMart grocery shopping demo with product search and a local basket."
 publish_to: 'none'
 version: 0.1.0
 
@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_svg: ^2.2.3
+  cupertino_icons: ^1.0.8
 
 dev_dependencies:
   flutter_test:

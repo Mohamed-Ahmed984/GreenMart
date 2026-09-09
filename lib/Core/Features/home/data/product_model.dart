@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class ProductModel {
   final String id;
   final String image;
@@ -18,7 +16,7 @@ class ProductModel {
   });
 }
 
-List<ProductModel> Offers = [
+List<ProductModel> offers = [
   ProductModel(
     id: '1',
     image:
@@ -111,7 +109,7 @@ List<ProductModel> Offers = [
   ),
 ];
 
-List<ProductModel> BestSelling = [
+List<ProductModel> bestSelling = [
   ProductModel(
     id: '11',
     image: 'https://pngimg.com/uploads/tomato/tomato_PNG12581.png',

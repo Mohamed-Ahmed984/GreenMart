@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_13/Core/Style/Colors.dart';
+import 'package:flutter_application_13/Core/Style/app_colors.dart';
 
 class AppThemes {
   static const String fontFamily = "Poppins";
@@ -16,6 +16,7 @@ class AppThemes {
   );
 
   static ThemeData light = ThemeData(
+    useMaterial3: true,
     fontFamily: fontFamily,
     scaffoldBackgroundColor: background,
 
@@ -23,6 +24,11 @@ class AppThemes {
       style: TextButton.styleFrom(foregroundColor: blackColor),
     ),
 
+    filledButtonTheme: FilledButtonThemeData(
+      style: FilledButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+      ),
+    ),
     appBarTheme: AppBarTheme(backgroundColor: AppColors.background),
     colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
 

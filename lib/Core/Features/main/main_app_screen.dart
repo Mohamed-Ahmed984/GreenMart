@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_13/Core/Constant/app_image.dart';
 import 'package:flutter_application_13/Core/Features/home/pages/home_screen.dart';
-import 'package:flutter_application_13/Core/Style/Colors.dart';
+import 'package:flutter_application_13/Core/Style/app_colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_application_13/Core/Features/intro/welcome_screen.dart';
 
 class MainAppScreen extends StatefulWidget {
-  const MainAppScreen({super.key});
+  const MainAppScreen({super.key, this.email});
+  final String? email;
 
   @override
   State<MainAppScreen> createState() => _MainAppScreenState();
@@ -19,13 +21,43 @@ class _MainAppScreenState extends State<MainAppScreen> {
     Center(child: Text('Explore')),
     Center(child: Text('Cart')),
     Center(child: Text('Favorites')),
-    Center(child: Text('Profile')),
+    SizedBox.shrink(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: screens[currentindex],
+      body: currentindex == 4
+          ? Scaffold(
+              appBar: AppBar(title: const Text('Your account')),
+              body: ListView(
+                padding: const EdgeInsets.all(24),
+                children: [
+                  const Icon(Icons.person_outline, size: 72),
+                  const SizedBox(height: 20),
+                  Text(
+                    widget.email ?? 'Guest shopper',
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'This is a local shopping demo. No real account, payment, or delivery service is connected.',
+                  ),
+                  const SizedBox(height: 24),
+                  OutlinedButton(
+                    onPressed: () => Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (_) => const WelcomeScreen(),
+                      ),
+                      (_) => false,
+                    ),
+                    child: const Text('Leave demo'),
+                  ),
+                ],
+              ),
+            )
+          : screens[currentindex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: currentindex,

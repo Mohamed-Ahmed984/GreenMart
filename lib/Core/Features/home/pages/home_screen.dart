@@ -3,8 +3,7 @@ import 'package:flutter_application_13/Core/Features/home/data/product_model.dar
 import 'package:flutter_application_13/Core/Features/home/search/search_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_application_13/Core/Constant/app_image.dart';
-import 'package:flutter_application_13/Core/Style/Colors.dart';
-import 'package:flutter_application_13/Features/home/data/product_model.dart';
+import 'package:flutter_application_13/Core/Style/app_colors.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -54,11 +53,16 @@ class HomeScreen extends StatelessWidget {
 
               Row(
                 children: [
-                  const Text(
-                    "Exclusive Offers",
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                  const Expanded(
+                    child: Text(
+                      "Exclusive Offers",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
-                  const Spacer(),
+                  const SizedBox(width: 8),
                   Text(
                     "see all",
                     style: TextStyle(color: AppColors.primaryColor),
@@ -72,11 +76,11 @@ class HomeScreen extends StatelessWidget {
                 height: 230,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
-                  itemCount: Offers.length,
+                  itemCount: offers.length,
                   separatorBuilder: (context, index) =>
                       const SizedBox(width: 14),
                   itemBuilder: (context, index) {
-                    return _productCard(Offers[index]);
+                    return _productCard(offers[index]);
                   },
                 ),
               ),
@@ -85,11 +89,16 @@ class HomeScreen extends StatelessWidget {
 
               Row(
                 children: [
-                  const Text(
-                    "Best Selling",
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                  const Expanded(
+                    child: Text(
+                      "Best Selling",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
-                  const Spacer(),
+                  const SizedBox(width: 8),
                   Text(
                     "see all",
                     style: TextStyle(color: AppColors.primaryColor),
@@ -103,11 +112,11 @@ class HomeScreen extends StatelessWidget {
                 height: 230,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
-                  itemCount: BestSelling.length,
+                  itemCount: bestSelling.length,
                   separatorBuilder: (context, index) =>
                       const SizedBox(width: 14),
                   itemBuilder: (context, index) {
-                    return _productCard(BestSelling[index]);
+                    return _productCard(bestSelling[index]);
                   },
                 ),
               ),
@@ -133,7 +142,12 @@ class HomeScreen extends StatelessWidget {
           SizedBox(
             height: 90,
             width: double.infinity,
-            child: Image.network(product.image, fit: BoxFit.contain),
+            child: Image.network(
+              product.image,
+              fit: BoxFit.contain,
+              errorBuilder: (_, error, stack) =>
+                  const Icon(Icons.image_not_supported_outlined, size: 48),
+            ),
           ),
           const SizedBox(height: 10),
           Text(
@@ -153,12 +167,13 @@ class HomeScreen extends StatelessWidget {
               Text(
                 '\$${product.price.toStringAsFixed(1)}',
                 style: const TextStyle(
-                  fontSize: 20,
+                  fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),
               ),
               const Spacer(),
               FloatingActionButton.small(
+                heroTag: 'add-${product.id}',
                 elevation: 0,
                 backgroundColor: AppColors.primaryColor,
                 foregroundColor: AppColors.background,
@@ -205,6 +220,7 @@ class CustomTextFormField extends StatelessWidget {
   final String? hintText;
   final Widget? prefixIcon;
   final bool enabled;
+  final ValueChanged<String> onChanged;
 
   const CustomTextFormField({
     super.key,
@@ -212,13 +228,14 @@ class CustomTextFormField extends StatelessWidget {
     this.hintText,
     this.prefixIcon,
     this.enabled = true,
-    required void Function(String value) onChanged,
+    required this.onChanged,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       enabled: enabled,
+      onChanged: onChanged,
       controller: controller,
       decoration: InputDecoration(
         hintText: hintText,
