@@ -1,0 +1,73 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_application_13/Core/Features/main/main_app_screen.dart';
+import 'package:flutter_application_13/Core/Style/app_theme.dart';
+import 'package:flutter_application_13/shopping/shopping_store.dart';
+import 'navigation_test.dart' show tapVisible, reveal;
+
+void main() {
+  WidgetController.hitTestWarningShouldBeFatal = true;
+  testWidgets(
+    'browse, favorite, search, cart edits and demo checkout on a small phone',
+    (tester) async {
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(320, 568);
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      final store = ShoppingStore();
+      addTearDown(store.dispose);
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppThemes.light,
+          home: MainAppScreen(store: store),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tapVisible(tester, find.byKey(const Key('add-1')));
+      expect(store.quantity('1'), 1);
+      await tapVisible(tester, find.byKey(const Key('favorite-1')));
+      await tapVisible(tester, find.text('Favorites'));
+      expect(find.text('Apple'), findsWidgets);
+      await tapVisible(tester, find.byKey(const Key('add-1')));
+      expect(store.quantity('1'), 2);
+      await tapVisible(tester, find.text('Cart'));
+      expect(find.byKey(const Key('cart-total')), findsOneWidget);
+      expect(find.text('\$30.00'), findsWidgets);
+      await tapVisible(tester, find.byKey(const Key('decrease-1')));
+      expect(store.quantity('1'), 1);
+      await tapVisible(tester, find.byKey(const Key('increase-1')));
+      expect(store.quantity('1'), 2);
+      await tapVisible(tester, find.text('Explore'));
+      await tester.enterText(
+        find.byKey(const Key('product-search')),
+        '  APPLE  ',
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Apple'), findsWidgets);
+      await tester.enterText(
+        find.byKey(const Key('product-search')),
+        'nothingmatches',
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('No products match your search.'), findsOneWidget);
+      await tapVisible(tester, find.byTooltip('Clear search'));
+      await tapVisible(tester, find.text('Vegetables'));
+      expect(find.text('Apple'), findsNothing);
+      await tapVisible(tester, find.text('Cart'));
+      await tapVisible(tester, find.byKey(const Key('review-order')));
+      await tapVisible(tester, find.text('Keep shopping'));
+      expect(store.itemCount, 2);
+      await tapVisible(tester, find.byKey(const Key('review-order')));
+      await tapVisible(tester, find.byKey(const Key('confirm-order')));
+      expect(find.text('Demo order created'), findsOneWidget);
+      expect(store.itemCount, 0);
+      await tapVisible(tester, find.text('Done'));
+      expect(find.text('Your basket is empty'), findsOneWidget);
+      await tapVisible(tester, find.text('Account'));
+      await reveal(tester, find.text('DEMO-0001'));
+      expect(find.text('DEMO-0001'), findsOneWidget);
+      await tester.pumpWidget(const SizedBox.shrink());
+      expect(tester.takeException(), isNull);
+    },
+  );
+}
